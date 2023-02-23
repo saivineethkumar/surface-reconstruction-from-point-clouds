@@ -74,17 +74,35 @@ def mlsReconstruction(points, normals, X, Y, Z):
     ################################################
     # <================START CODE<================>
     ################################################
-     
-    # replace this random implicit function with your MLS implementation!
-    IF = np.random.rand(X.shape[0], X.shape[1], X.shape[2]) - 0.5
+    # Finding beta
+    tree = KDTree(points)
+    dist, idx = tree.query(points, k=2)
+    beta = 2*np.sum(dist)/dist.shape[0]
+    # print("beta: ", beta)
 
     # this is an example of a kd-tree nearest neighbor search (adapt it accordingly for your task)
 	# use kd-trees to find nearest neighbors efficiently!
 	# kd-tree: https://en.wikipedia.org/wiki/K-d_tree
     Q = np.array([X.reshape(-1), Y.reshape(-1), Z.reshape(-1)]).transpose()
     tree = KDTree(points)
-    _, idx = tree.query(Q, k=2)  
-	
+    K = 50
+    _, idx = tree.query(Q, k=K)
+
+
+    # replace this random implicit function with your MLS implementation!
+    IF = []
+    for i in range(Q.shape[0]):
+        phisum = 0
+        ifsum = 0
+        for j in range(K):
+            dj = np.dot(normals[idx[i][j]], Q[i]-points[idx[i][j]])
+            phij = np.exp(-1*np.dot(Q[i]-points[idx[i][j]], Q[i]-points[idx[i][j]])/(beta*beta))
+            ifsum += dj*phij
+            phisum += phij
+
+        IF.append(ifsum/phisum)
+    
+    IF = np.array(IF).reshape(X.shape[0], X.shape[1], X.shape[2])
 
     ################################################
     # <================END CODE<================>
@@ -111,15 +129,19 @@ def naiveReconstruction(points, normals, X, Y, Z):
     # <================START CODE<================>
     ################################################
 
-    # replace this random implicit function with your naive surface reconstruction implementation!
-    IF = np.random.rand(X.shape[0], X.shape[1], X.shape[2]) - 0.5
-
     # this is an example of a kd-tree nearest neighbor search (adapt it accordingly for your task)
 	# use kd-trees to find nearest neighbors efficiently!
 	# kd-tree: https://en.wikipedia.org/wiki/K-d_tree
     Q = np.array([X.reshape(-1), Y.reshape(-1), Z.reshape(-1)]).transpose()
     tree = KDTree(points)
-    _, idx = tree.query(Q, k=2)  
+    _, idx = tree.query(Q, k=1)
+
+    # replace this random implicit function with your naive surface reconstruction implementation!
+    # IF = np.random.rand(X.shape[0], X.shape[1], X.shape[2]) - 0.5
+    IF = []
+    for i in range(Q.shape[0]):
+        IF.append(np.dot(normals[idx[i][0]], Q[i]-points[idx[i][0]]))
+    IF = np.array(IF).reshape(X.shape[0], X.shape[1], X.shape[2])
 	
     ################################################
     # <================END CODE<================>
