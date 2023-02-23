@@ -1,8 +1,5 @@
-# surface-reconstruction-from-point-clouds
+# Surface reconstruction from point clouds
 
-# Intelligent Visual Computing Course Projects
+# part of Intelligent Visual Computing Course Projects, UMass Amherst
 
-Constructing surface from point clouds using the following methods:
-1. Implicit Functions
-2. Moving least squares
-3. Marching cubes
+Constructing surface from point clouds using the Marching cubes algorithm with naive implicit functions and Moving least squares.
