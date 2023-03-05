@@ -154,7 +154,7 @@ def naiveReconstruction(points, normals, X, Y, Z):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Basic surface reconstruction')
-    parser.add_argument('--file', type=str, default = "sphere.pts", help='input point cloud filename')
+    parser.add_argument('--file', type=str, default = "./point_clouds/sphere.pts", help='input point cloud filename')
     parser.add_argument('--method', type=str, default = "sphere",\
                         help='method to use: mls (Moving Least Squares), naive (naive reconstruction), sphere (just shows a sphere)')
     args = parser.parse_args()
